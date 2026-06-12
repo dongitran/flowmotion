@@ -43,14 +43,17 @@ const Editor = memo((props: EditorProps & { hostStore: UseBoundStore<StoreApi<Ho
 });
 
 export default function (props: EditorProps) {
-	const hostStore = createHostStore(
-		true,
-		{
-			name: props.projectName,
-			fsItems: props.project,
-		},
-		props
+	const [hostStore] = useState(() =>
+		createHostStore(
+			true,
+			{
+				name: props.projectName,
+				fsItems: props.project,
+			},
+			props
+		)
 	);
+
 	useEffect(() => {
 		if (props.display) {
 			initializeDisplay(hostStore, props.display);
@@ -77,7 +80,8 @@ export default function (props: EditorProps) {
 				analyticsObservable,
 			});
 		}
-	});
+	}, [hostStore]);
+
 	return (
 		<Root {...props}>
 			<Editor {...props} hostStore={hostStore} />
