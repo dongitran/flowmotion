@@ -134,25 +134,23 @@ export default function (props: { height?: string }) {
 	}, [monaco, globalLibraryInitialized]);
 
 	useEffect(() => {
-		if (!isCompilerServiceReady) {
+		if (!isCompilerServiceReady || !compilerService || monaco._tag === 'None') {
 			return;
 		}
-		if (isCompilerServiceReady && !compilerService) {
-			throw new Error('Signal says ready but found no compiler service!');
-		}
-		const libsFs = compilerService!.libsFs;
+		const libsFs = compilerService.libsFs;
 		const definitions = Array.from(libsFs, ([filePath, content]) => ({
 			filePath,
 			content,
 		}));
 		addDefinitionsToMonaco(definitions);
-	}, [isCompilerServiceReady]);
+	}, [isCompilerServiceReady, compilerService, monaco]);
 
 	useEffect(() => {
-		if (isCompilerServiceReady) {
-			sendCompileCommand();
+		if (!isCompilerServiceReady || !globalLibraryInitialized) {
+			return;
 		}
-	}, [isCompilerServiceReady, projectVersion]);
+		sendCompileCommand();
+	}, [isCompilerServiceReady, globalLibraryInitialized, projectVersion]);
 
 	useEffect(() => {
 		if (compiledProjectVersion <= 0) {
