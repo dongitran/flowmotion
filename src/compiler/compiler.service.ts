@@ -28,12 +28,6 @@ export class CompilerService {
 			errors: CompilerErrors;
 		}) => void
 	) {
-		const libsFsMap = this.parseLibs();
-		this.sendCommand({
-			command: CompilerCommand.INIT,
-			fs: libsFsMap,
-		});
-
 		this.worker.onmessage = (event: MessageEvent<CompilerResponse>) => {
 			if (event.data.responseCode === CompilerResponseCode.INITIALIZED) {
 				this.isInitialized = true;
@@ -64,6 +58,12 @@ export class CompilerService {
 				return;
 			}
 		};
+
+		const libsFsMap = this.parseLibs();
+		this.sendCommand({
+			command: CompilerCommand.INIT,
+			fs: libsFsMap,
+		});
 	}
 
 	private parseLibs(): Map<string, string> {
