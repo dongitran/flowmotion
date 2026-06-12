@@ -18,7 +18,7 @@ export default defineConfig((configEnv) => ({
 		minify: true,
 		lib: {
 			entry: resolve('src', 'index.tsx'),
-			name: '@metz/simulacrum',
+			name: 'flowmotion',
 			formats: ['es'],
 			fileName: (format) => `index.js`,
 		},

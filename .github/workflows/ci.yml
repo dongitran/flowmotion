@@ -1,0 +1,92 @@
+name: ci
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish @dongtran/flowmotion to npm
+        required: false
+        type: boolean
+        default: false
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: flowmotion-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    name: Build and verify Flowmotion
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: yarn
+
+      - name: Install dependencies
+        run: npx -y yarn@1.22.22 install --frozen-lockfile
+
+      - name: Build
+        run: npx -y yarn@1.22.22 build
+
+      - name: Verify publish tarball
+        run: npm pack --dry-run
+
+  publish:
+    name: Publish Flowmotion to npm
+    runs-on: ubuntu-latest
+    needs: ci
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'workflow_dispatch' && inputs.publish == true && github.ref == 'refs/heads/main')
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: yarn
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: npx -y yarn@1.22.22 install --frozen-lockfile
+
+      - name: Build
+        run: npx -y yarn@1.22.22 build
+
+      - name: Check whether version is already published
+        id: publish_check
+        run: |
+          package_name="$(node -p "require('./package.json').name")"
+          package_version="$(node -p "require('./package.json').version")"
+
+          if npm view "${package_name}@${package_version}" version >/dev/null 2>&1; then
+            echo "should_publish=false" >> "$GITHUB_OUTPUT"
+            echo "Version ${package_version} is already published. Skipping npm publish."
+          else
+            echo "should_publish=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publish
+        if: steps.publish_check.outputs.should_publish == 'true'
+        run: npm publish --provenance --access public

@@ -1,8 +1,27 @@
 {
-	"name": "@metz/simulacrum",
-	"version": "0.8.0",
+	"name": "@dongtran/flowmotion",
+	"version": "0.8.1",
+	"description": "Code-driven animated system flow diagrams for React.",
+	"keywords": [
+		"architecture",
+		"diagram",
+		"animation",
+		"typescript",
+		"react",
+		"reactflow",
+		"simulation",
+		"system-design"
+	],
 	"type": "module",
 	"license": "Apache-2.0",
+	"repository": {
+		"type": "git",
+		"url": "git+ssh://git@github.com/dongitran/flowmotion.git"
+	},
+	"bugs": {
+		"url": "https://github.com/dongitran/flowmotion/issues"
+	},
+	"homepage": "https://github.com/dongitran/flowmotion#readme",
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc && vite build",
