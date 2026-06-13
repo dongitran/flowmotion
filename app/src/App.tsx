@@ -9,7 +9,7 @@ import './app.css';
 type ActiveView = 'preview' | 'code';
 
 const packageName = '@dongtran/flowmotion';
-const packageVersion = '0.8.8';
+const packageVersion = '0.8.9';
 
 function getBuildStatus(build: FlowBuild): BuildStatus {
 	if (build.state === 'uninitiated') {
