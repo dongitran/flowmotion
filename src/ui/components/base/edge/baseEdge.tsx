@@ -9,14 +9,14 @@ function EdgeLabel({ edgeId }: { edgeId: string }) {
 	return (
 		<div
 			id={`${edgeId}_signal_packet`}
+			className="flowmotion_signal_packet"
 			style={{
 				position: 'absolute',
-				width: '12px',
-				height: '12px',
+				width: '40px',
+				height: '40px',
 				borderRadius: '100%',
-				backgroundColor: 'white',
-				top: '-6px',
-				left: '-6px',
+				top: '-20px',
+				left: '-20px',
 				opacity: 0,
 			}}
 		></div>

@@ -96,13 +96,13 @@ export class SignalPacketManager {
 	private createPacket(edgeId: string) {
 		const id = `${this.namespace}_${(++this.sequence).toString()}_signal_packet`;
 		const divNode = document.createElement('div');
+		divNode.classList.add('flowmotion_signal_packet');
 		divNode.style.setProperty('position', 'absolute');
-		divNode.style.setProperty('width', '12px');
-		divNode.style.setProperty('height', '12px');
+		divNode.style.setProperty('width', '40px');
+		divNode.style.setProperty('height', '40px');
 		divNode.style.setProperty('border-radius', '100%');
-		divNode.style.setProperty('background-color', 'white');
-		divNode.style.setProperty('top', '-6px');
-		divNode.style.setProperty('left', '-6px');
+		divNode.style.setProperty('top', '-20px');
+		divNode.style.setProperty('left', '-20px');
 		divNode.style.setProperty('opacity', '0');
 		divNode.setAttribute('id', id);
 

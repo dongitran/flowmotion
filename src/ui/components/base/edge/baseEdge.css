@@ -1,17 +1,40 @@
-.react-flow__edge-path.active {
-	stroke: #5954cb;
-	stroke-width: 4;
-	stroke-opacity: 1;
-}
-
-.react-flow__edge-path.was_active {
-	stroke: #5197a4;
-	stroke-width: 4;
-	stroke-opacity: 0.75;
-}
-
 .react-flow__edge-path {
 	stroke: #454545;
 	stroke-width: 4;
 	stroke-opacity: 0.2;
+}
+
+.react-flow__edge-path.active {
+	animation: flowmotion-edge-pulse 0.7s linear infinite;
+	filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.95));
+	stroke: #22d3ee;
+	stroke-dasharray: 14 10;
+	stroke-linecap: round;
+	stroke-width: 7;
+	stroke-opacity: 1;
+}
+
+.react-flow__edge-path.was_active {
+	filter: drop-shadow(0 0 4px rgba(45, 212, 191, 0.35));
+	stroke: #2dd4bf;
+	stroke-dasharray: 3 9;
+	stroke-linecap: round;
+	stroke-width: 5;
+	stroke-opacity: 0.8;
+}
+
+.flowmotion_signal_packet {
+	background: radial-gradient(circle at 35% 35%, #ffffff 0, #67e8f9 38%, #0891b2 100%);
+	border: 2px solid rgba(236, 254, 255, 0.95);
+	box-shadow:
+		0 0 0 6px rgba(34, 211, 238, 0.18),
+		0 0 18px rgba(34, 211, 238, 0.95);
+	pointer-events: none;
+	z-index: 20;
+}
+
+@keyframes flowmotion-edge-pulse {
+	to {
+		stroke-dashoffset: -24;
+	}
 }
