@@ -52,9 +52,6 @@ export function getErrorsFromMonacoWorker(hostStore: StoreApi<HostState>) {
 	const ideState = getIDEStore(hostStore).getState();
 	return pipe(
 		ideState.monaco,
-		O.match(() => {
-			console.error('monaco not initialized yet!');
-			return Promise.resolve([]);
-		}, getErrorsFromMonacoInstance)
+		O.match(() => Promise.resolve([]), getErrorsFromMonacoInstance)
 	);
 }
