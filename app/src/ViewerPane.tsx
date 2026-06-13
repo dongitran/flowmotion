@@ -10,6 +10,7 @@ export default function ViewerPane(props: {
 		<Playground
 			key={`${props.example.id}-${props.build.artificats.projectVersion}`}
 			enableModalProvider
+			autoPlay
 			projectName={`flowmotion-${props.example.id}`}
 			height={props.height}
 			build={props.build}
