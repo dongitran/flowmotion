@@ -2,14 +2,10 @@ import { create, useStore } from 'zustand';
 import { AnalyticsEvent, HostState, StateChangeEvent, StateChangeSource } from './host.state';
 import { Subject, from } from 'rxjs';
 import { createCodeDaemonStore } from '../code-daemon/code-daemon.store';
-import { useStories } from '../stories/stories.store';
+import { createStoriesStore } from '../stories/stories.store';
 import { createContext, useContext } from 'react';
 import { BaseProps, FSItem, FileItem } from '../../ui-types';
-import { useDisplay } from '../display/display.store';
-
-const hostSubject = new Subject<StateChangeEvent<StateChangeSource>>();
-const analyticsSubject = new Subject<AnalyticsEvent>();
-const analyticsObservable = from(analyticsSubject);
+import { createDisplayStore } from '../display/display.store';
 
 function getInitialFilePath(fsItems: FSItem[]) {
 	const files = fsItems.filter((fsi) => fsi.type === 'file') as FileItem[];
@@ -23,8 +19,12 @@ export const createHostStore = (
 		fsItems: FSItem[];
 	},
 	baseProps: BaseProps
-) =>
-	create<HostState>((set, get) => ({
+) => {
+	const hostSubject = new Subject<StateChangeEvent<StateChangeSource>>();
+	const analyticsSubject = new Subject<AnalyticsEvent>();
+	const analyticsObservable = from(analyticsSubject);
+
+	return create<HostState>((set, get) => ({
 		isEditMode,
 		baseProps,
 
@@ -40,8 +40,8 @@ export const createHostStore = (
 				getInitialFilePath(project.fsItems),
 				baseProps.notesContent
 			),
-			stories: useStories,
-			display: useDisplay,
+			stories: createStoriesStore(),
+			display: createDisplayStore(),
 		},
 
 		getHostSubject<T extends StateChangeSource>() {
@@ -52,6 +52,7 @@ export const createHostStore = (
 			get().analyticsSubject.next({ event, context });
 		},
 	}));
+};
 
 export const HostContext = createContext<ReturnType<typeof createHostStore> | null>(null);
 

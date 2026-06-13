@@ -2,37 +2,40 @@ import { create } from 'zustand';
 import { StoriesState } from './stories.state';
 import { createStoryStore } from '../story/story.store';
 
-export const useStories = create<StoriesState>((set, get) => ({
-	stories: {},
+export const createStoriesStore = () =>
+	create<StoriesState>((set, get) => ({
+		stories: {},
 
-	addStory(params, hostStore) {
-		const store = createStoryStore(
-			params.id,
-			params.title,
-			params.script,
-			hostStore,
-			params.resolutionNodeMap,
-			params.storyResolution
-		);
-		set({
-			stories: {
-				...get().stories,
-				[params.id]: store,
-			},
-		});
+		addStory(params, hostStore) {
+			const store = createStoryStore(
+				params.id,
+				params.title,
+				params.script,
+				hostStore,
+				params.resolutionNodeMap,
+				params.storyResolution
+			);
+			set({
+				stories: {
+					...get().stories,
+					[params.id]: store,
+				},
+			});
 
-		return store;
-	},
+			return store;
+		},
 
-	deleteStory(id) {
-		const stories = get().stories;
-		delete stories[id];
-		set({
-			stories,
-		});
-	},
+		deleteStory(id) {
+			const stories = get().stories;
+			delete stories[id];
+			set({
+				stories,
+			});
+		},
 
-	getStoryIdForCreation() {
-		return Object.keys(get().stories).length.toString();
-	},
-}));
+		getStoryIdForCreation() {
+			return Object.keys(get().stories).length.toString();
+		},
+	}));
+
+export const useStories = createStoriesStore();

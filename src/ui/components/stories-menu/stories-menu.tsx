@@ -18,7 +18,6 @@ import { VscPlay } from 'react-icons/vsc';
 import { useDisclosure } from '@mantine/hooks';
 import { useCallback, useState } from 'react';
 import { IconTrash } from '@tabler/icons-react';
-import { useStories } from '../../state-managers/stories/stories.store';
 import { StoryState } from '../../state-managers/story/story.store';
 import { FaPlusSquare, FaProjectDiagram } from 'react-icons/fa';
 import { debounce, noop } from 'lodash';
@@ -32,6 +31,7 @@ import RenderIfAllowedComponent from '../render-if-allowed/render-if-allowed.com
 import IconButtonComponent from '../icon-button/icon-button.component';
 import { FaPlus } from 'react-icons/fa6';
 import { openConfirmModal } from '../open-modal/open-confirm-modal';
+import { useStore } from 'zustand';
 
 function EmptySearchResults() {
 	return (
@@ -186,8 +186,9 @@ export default function (props: { activeStory: StoryState; onSelect: (id: string
 	const { classes } = useStyles();
 	const [opened, { close, toggle }] = useDisclosure(false);
 	const [searchQuery, setSearchQuery] = useState<string>('');
+	const storiesStore = useHost((state) => state.stores.stories);
 
-	const { stories, deleteStory, getStoryIdForCreation } = useStories((state) => ({
+	const { stories, deleteStory, getStoryIdForCreation } = useStore(storiesStore, (state) => ({
 		stories: state.stories,
 		addStory: state.addStory,
 		deleteStory: state.deleteStory,

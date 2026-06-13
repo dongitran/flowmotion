@@ -4,13 +4,13 @@ import { CodeDaemonState } from '../../state-managers/code-daemon/code-daemon-ty
 import { useEffect, useState } from 'react';
 import StoriesMenu from '../stories-menu/stories-menu';
 import FlowProviderFactory from '../story-provider-factory/story-provider-factory';
-import { useStories } from '../../state-managers/stories/stories.store';
 import { useCommands } from '../../commands/use-command.hook';
 import { useHost } from '../../state-managers/host/host.store';
 import { StoryContext } from '../../state-managers/story/story.store';
 import { StoriesState } from '../../state-managers/stories/stories.state';
 import { PlaygroundViewFlags } from '../../ui-types';
 import ConditionalRenderer from '../conditional-renderer';
+import { useStore } from 'zustand';
 
 const useStyles = createStyles((theme) => ({
 	storyMenu: {
@@ -101,7 +101,8 @@ export default function StoryRenderer(props: {
 	height?: string;
 	viewFlags?: PlaygroundViewFlags;
 }) {
-	const { stories } = useStories((state) => ({ stories: state.stories }));
+	const storiesStore = useHost((state) => state.stores.stories);
+	const { stories } = useStore(storiesStore, (state) => ({ stories: state.stories }));
 	const isEditMode = useHost((state) => state.isEditMode);
 
 	useEffect(() => {
