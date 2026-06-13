@@ -25,6 +25,7 @@ function _StoryRenderer(props: {
 	projectName: string;
 	build: CodeDaemonState['build'];
 	stories: StoriesState['stories'];
+	autoPlay?: boolean;
 	height?: string;
 	viewFlags?: PlaygroundViewFlags;
 }) {
@@ -82,6 +83,7 @@ function _StoryRenderer(props: {
 							<FlowProviderFactory
 								namespace={storyId}
 								projectName={props.projectName}
+								autoPlay={props.autoPlay}
 								height={props.height || baseProps.height}
 								build={build}
 								story={stories[storyId]}
@@ -98,6 +100,7 @@ function _StoryRenderer(props: {
 export default function StoryRenderer(props: {
 	projectName: string;
 	build: CodeDaemonState['build'];
+	autoPlay?: boolean;
 	height?: string;
 	viewFlags?: PlaygroundViewFlags;
 }) {

@@ -42,6 +42,7 @@ export default memo(function StoryProviderFactory(props: {
 	namespace: string;
 	build: CodeDaemonState['build'] & { state: 'built' };
 	story: StoreApi<StoryState>;
+	autoPlay?: boolean;
 	height?: string;
 	viewFlags?: PlaygroundViewFlags;
 }) {
@@ -95,8 +96,11 @@ export default memo(function StoryProviderFactory(props: {
 		hasHydratedStory.current = true;
 		return runAfterNextPaint(() => {
 			hydrateStoryScriptFromStore(props.story.getState().id);
+			if (props.autoPlay && props.story.getState().isHydrated) {
+				props.story.getState().setFlowPlayerMode('auto');
+			}
 		});
-	}, [bootState.state]);
+	}, [bootState.state, props.autoPlay]);
 
 	if (bootState.state === 'loading') {
 		return (

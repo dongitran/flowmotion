@@ -25,6 +25,7 @@ export function hydrateStoryScriptFromStore(hostStore: StoreApi<HostState>, stor
 
 	const storyStore = getStoryStore(hostStore, storyId);
 	const script = storyStore.getState().script;
+	storyStore.getState().setIsHydrated(false);
 	try {
 		hydrateStoryScript(
 			script.compiled,
@@ -32,7 +33,10 @@ export function hydrateStoryScriptFromStore(hostStore: StoreApi<HostState>, stor
 			storyStore.getState().runtime,
 			projectName
 		);
+		storyStore.getState().setErrors([]);
+		storyStore.getState().setIsHydrated(true);
 	} catch (error) {
+		storyStore.getState().setIsHydrated(false);
 		storyStore.getState().setErrors([error]);
 	}
 }

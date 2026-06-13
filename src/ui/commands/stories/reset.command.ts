@@ -16,6 +16,7 @@ export async function reset(
 ) {
 	const storyStore = getStoryStore(hostStore, params.storyId);
 	const { consumeRenderToken, reset, returnRenderToken } = storyStore.getState();
+	storyStore.getState().setIsHydrated(false);
 
 	//render reset
 	const token = consumeRenderToken();

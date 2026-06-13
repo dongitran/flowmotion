@@ -84,6 +84,7 @@ export type EditorProps = {
 export type PlaygroundProps = {
 	storySetups: [RawStorySetup, ...RawStorySetup[]];
 	build: CodeDaemonState['build'] & { state: 'built' };
+	autoPlay?: boolean;
 	viewFlags?: PlaygroundViewFlags;
 	onMount?: (params: { analyticsObservable: Observable<AnalyticsEvent> }) => void;
 } & BaseProps;

@@ -84,6 +84,9 @@ export type StoryState = {
 
 	updateExecutionLog: (flow: Flow, nodeId: string, item: NodeStateTimelineItem) => void;
 
+	isHydrated: boolean;
+	setIsHydrated: (_: boolean) => void;
+
 	isFinished: boolean;
 	setIsFinished: (_: boolean) => void;
 
@@ -194,6 +197,7 @@ export const createStoryStore = (
 			nodes: [],
 			edges: [],
 			flowPlayerProps: { speed: '1x', mode: 'manual' },
+			isHydrated: false,
 			isFinished: false,
 			entryPointModalOpenFor: undefined,
 			errors: [],
@@ -312,6 +316,7 @@ export const createStoryStore = (
 				});
 				set({
 					nodes: resettedNodes,
+					isHydrated: false,
 					isFinished: false,
 					flowPlayerProps: { speed: '1x', mode: 'manual' },
 				});
@@ -439,6 +444,11 @@ export const createStoryStore = (
 					flowPlayerProps: produce(get().flowPlayerProps, (draft) => {
 						draft.mode = mode;
 					}),
+				});
+			},
+			setIsHydrated: (param: boolean) => {
+				set({
+					isHydrated: param,
 				});
 			},
 			setIsFinished: (param: boolean) => {
@@ -667,6 +677,7 @@ export const createStoryStore = (
 				get().setRuntimeError(undefined);
 				get().renderTokens = [1];
 				get().flowPlayerProps = { speed: '1x', mode: 'manual' };
+				get().isHydrated = false;
 				get().isFinished = false;
 			},
 		}))
