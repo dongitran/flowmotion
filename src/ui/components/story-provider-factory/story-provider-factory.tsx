@@ -1,4 +1,4 @@
-import { memo, useContext, useEffect, useState } from 'react';
+import { memo, useContext, useEffect, useRef, useState } from 'react';
 import StoryProvider from '../storyProvider/storyProvider';
 import { CodeDaemonState } from '../../state-managers/code-daemon/code-daemon-types';
 import { StoryState } from '../../state-managers/story/story.store';
@@ -25,6 +25,18 @@ type BootState =
 			error: Error;
 	  };
 
+function runAfterNextPaint(callback: () => void) {
+	let secondFrame = 0;
+	const firstFrame = requestAnimationFrame(() => {
+		secondFrame = requestAnimationFrame(callback);
+	});
+
+	return () => {
+		cancelAnimationFrame(firstFrame);
+		cancelAnimationFrame(secondFrame);
+	};
+}
+
 export default memo(function StoryProviderFactory(props: {
 	projectName: string;
 	namespace: string;
@@ -47,6 +59,7 @@ export default memo(function StoryProviderFactory(props: {
 	const [bootState, setBootState] = useState<BootState>({
 		state: 'loading',
 	});
+	const hasHydratedStory = useRef(false);
 
 	const {
 		stories: { hydrateStoryScriptFromStore },
@@ -55,7 +68,6 @@ export default memo(function StoryProviderFactory(props: {
 	useEffect(() => {
 		(async () => {
 			const { nodes, edges } = await bootLoader.boot();
-			hydrateStoryScriptFromStore(props.story.getState().id);
 			props.story.setState({
 				nodes,
 				edges,
@@ -74,6 +86,17 @@ export default memo(function StoryProviderFactory(props: {
 			});
 		});
 	}, []);
+
+	useEffect(() => {
+		if (bootState.state !== 'loaded' || hasHydratedStory.current) {
+			return;
+		}
+
+		hasHydratedStory.current = true;
+		return runAfterNextPaint(() => {
+			hydrateStoryScriptFromStore(props.story.getState().id);
+		});
+	}, [bootState.state]);
 
 	if (bootState.state === 'loading') {
 		return (
